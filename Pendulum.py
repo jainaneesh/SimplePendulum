@@ -2,30 +2,50 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 import math
 import numpy as np
+from PIL import Image
+import glob
+import natsort
 
+# x1 = []
+# y1 = []
+# global count
 
 def pendulum(theta,t,b,g,l,m):
+    # cnt = count
+    global count
+    # global fig
+    count = count+1
     theta1 = theta[0]
     theta2 = theta[1]
     dtheta1_dt = theta2
     dtheta2_dt = (-b/m)*theta2-(g/l)*math.sin(theta1)
-    dtheta_dt = [dtheta1_dt,dtheta2_dt]
+    dtheta_dt = [dtheta1_dt,dtheta2_dt]    
     x1 = l*math.sin(theta1)
     y1 = -l*math.cos(theta1)
+    
+    
+    # print(count)
+    # print()
     filename = 'test%5d.png'%count
-    count = count + 1
-    plt.figure()
-    plt.plot([x0, x1],[y0, y1])
+    fig = plt.figure()
+    # plt.figure(count)  
+    plt.plot([x0, x1],[y0, y1],'r-')
     plt.xlim([-2, 2])
     plt.ylim([0, 4])
     plt.grid()
     plt.axis('equal')
-    plt.show()
+    # plt.show()        
     plt.savefig(filename)
+    # plt.hold(False)
+    plt.close(fig)
+    # count = count + 1
     return dtheta_dt
 
 theta_0 = [0,3]
 t = np.linspace(0,20,300)
+# print(len(t))
+# t.reshape(len(t),1)
+# print(t.shape)
 x0 = 0
 y0 = 0
 count = 0
@@ -35,6 +55,15 @@ m = 1
 l = 1
 
 dtheta_dt = odeint(pendulum,theta_0,t,args=(b,g,l,m))
+imgs = glob.glob("*.png")
+images = natsort.natsorted(imgs,reverse = False)
+frames = []
+for i in images:
+    new_frame = Image.open(i)
+    frames.append(new_frame)
+
+# print(type(frames))
+frames[0].save('Pendulum_Animation_Using_Python.gif',format = 'GIF', append_images = frames[1:], save_all = True, duration = 40, loop = 1)
 
 #Plotting for animation
 # x = np.zeros((len(t),1),dtype=float)
