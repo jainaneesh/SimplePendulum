@@ -1,3 +1,5 @@
+print("Starting the program--------------------------------------------------------------------------")
+# Importing all the libraries here
 from scipy.integrate import odeint
 # import matplotlib
 # matplotlib.use('Agg')
@@ -6,11 +8,29 @@ import math
 import numpy as np
 from PIL import Image
 import os
+import glob
 import imageio
+
 
 directory = "Animation/"
 parent_dir = "C:/Users/jaina/Desktop/Python/SimplePendulum/"
-path = os.path.join(parent_dir,directory)
+
+check_folder = os.path.isdir(directory)
+print("\nChecking if the directory exists...")
+if not check_folder:
+    print("Directory" + directory + "not found...\n")
+    print("Making the new directory" + directory)
+    os.mkdir("Animation/")
+    print("Directory created\n")
+    path = os.path.join(parent_dir,directory)
+    print("Path is...\n")
+    print(path)
+else:
+    print("\nDirectory already exists!!!")
+    path = os.path.join(parent_dir,directory)
+    print("\nPath is...\n")
+    print(path)
+
 # print(path)
 
 # os.mkdir(path)
@@ -51,9 +71,9 @@ b = 0.05
 g = 9.81
 m = 1
 l = 1
-
+print("Computations started....\n")
 dtheta_dt = odeint(pendulum,theta_0,t,args=(b,g,l,m))
-
+print("Plotting the figure and saving it...\n")
 fig = plt.figure(2)
 plt.plot(t,dtheta_dt[:,0],'b-',label=r'$\frac{d\theta_1}{dt}=\theta_2$')
 plt.plot(t,dtheta_dt[:,1],'r--',label=r'$\frac{d\theta_2}{dt}-\frac{b}{m}\theta_2-\frac{g}{l}sin\theta_1$')
@@ -61,7 +81,8 @@ plt.ylabel('Plot')
 plt.xlabel('Time')
 plt.legend(loc='best')
 plt.savefig(parent_dir + "SimplePendulum.png")
-
+print("Saved the plot ",'SimplePendulum.png')
+print("Creating animation...\n")
 import imageio.v2 as imageio
 with imageio.get_writer("C:/Users/jaina/Desktop/Python/SimplePendulum/PENDULUM.gif", mode='i') as writer:
     for i in range(1, 1302):
@@ -72,3 +93,12 @@ with imageio.get_writer("C:/Users/jaina/Desktop/Python/SimplePendulum/PENDULUM.g
         # image = imageio.imread("C:/Users/jaina/Desktop/Python/SimplePendulum/Animation/filename")
         image = imageio.imread(path + filename)
         writer.append_data(image)
+
+print("Animation created...\n")
+print("Removing the files from ",directory)
+files = glob.glob(path + '*')
+for f in files:
+    os.remove(f)
+
+print("Removing the directory ",directory)
+os.removedirs("Animation/")
