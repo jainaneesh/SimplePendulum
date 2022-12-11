@@ -10,9 +10,9 @@ import natsort
 import os
 import imageio
 
-# directory = "Animation"
-# parent_dir = "C:/Users/jaina/Desktop/Python/SimplePendulum/"
-# path = os.path.join(parent_dir,directory)
+directory = "Animation/"
+parent_dir = "C:/Users/jaina/Desktop/Python/SimplePendulum/"
+path = os.path.join(parent_dir,directory)
 # print(path)
 
 # os.mkdir(path)
@@ -24,6 +24,7 @@ import imageio
 def pendulum(theta,t,b,g,l,m):
     # cnt = count
     global count
+    global path
     # global fig
     count = count+1
     theta1 = theta[0]
@@ -38,12 +39,13 @@ def pendulum(theta,t,b,g,l,m):
     # plt.figure(count)  
     plt.plot([-2, 2],[0, 0],'b-')
     plt.plot([x0, x1],[y0, y1],'r-')
+    plt.plot(x1,y1,'ro')
     plt.xlim(-2, 2)
-    plt.ylim(-4, 4)
-    plt.grid()
-    plt.axis('equal')
+    plt.ylim(-2, 2)
+    # plt.grid()
+    # plt.axis('equal')
     # plt.show()        
-    plt.savefig(filename)
+    plt.savefig(path + filename)
     # plt.hold(False)
     plt.close(fig)
     # count = count + 1
@@ -93,8 +95,11 @@ plt.xlabel('Time')
 plt.legend(loc='best')
 plt.show()
 
-import imageio
-with imageio.get_writer('pendulum.gif', mode='i') as writer:
+import imageio.v2 as imageio
+with imageio.get_writer("C:/Users/jaina/Desktop/Python/SimplePendulum/pendulum.gif", mode='i') as writer:
     for i in range(1, 1302):
-        image = imageio.imread("C:/Users/jaina/Desktop/Python/SimplePendulum/Animation/filename")
+        filename='test' + str(i)+ '.png'
+        # filename = 'test%5d.png'%i
+        # image = imageio.imread("C:/Users/jaina/Desktop/Python/SimplePendulum/Animation/filename")
+        image = imageio.imread(path + filename)
         writer.append_data(image)
